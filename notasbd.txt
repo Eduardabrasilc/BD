@@ -1,0 +1,208 @@
+Microsoft Windows [versão 10.0.22621.2283]
+(c) Microsoft Corporation. Todos os direitos reservados.
+
+C:\Users\dudab>cd C:\Program Files\MySQL\MySQL Server 8.0\bin
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p
+Enter password: *********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 33
+Server version: 8.0.34 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use 1sprint;
+Database changed
+mysql> select*from professor
+    -> ;
+Empty set (0.03 sec)
+
+mysql> insert into professor values
+    -> (null, 'Vivian', 'Silva', 'Banco de Dados', 'beber café'),
+    -> (null, 'Caio', 'Santos', 'Algoritmo', 'Torcedor do sp'),
+    -> (null, 'Monica', 'Herrero', 'Tecnologia da informação', 'Empresária'),
+    -> (null, 'Fernando', 'Brandão', 'Projeto e Inovação', 'Academia'),
+    -> (null, 'Eduardo', 'Santos', 'Arquitetura computacional', 'Arduino'),
+    -> (null, 'Thiago', 'Gomes', 'Socioemocional', 'Livro da vida');
+Query OK, 6 rows affected (0.06 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> select *from professor;
++-------------+----------+-----------+---------------------------+----------------+
+| idProfessor | nome     | sobrenome | especialidade1            | especialidade2 |
++-------------+----------+-----------+---------------------------+----------------+
+|           1 | Vivian   | Silva     | Banco de Dados            | beber café     |
+|           2 | Caio     | Santos    | Algoritmo                 | Torcedor do sp |
+|           3 | Monica   | Herrero   | Tecnologia da informação  | Empresária     |
+|           4 | Fernando | Brandão   | Projeto e Inovação        | Academia       |
+|           5 | Eduardo  | Santos    | Arquitetura computacional | Arduino        |
+|           6 | Thiago   | Gomes     | Socioemocional            | Livro da vida  |
++-------------+----------+-----------+---------------------------+----------------+
+6 rows in set (0.00 sec)
+
+mysql> create table disciplina;
+ERROR 4028 (HY000): A table must have at least one visible column.
+mysql> create table disciplina(
+    -> idDisc int primary key auto_increment,
+    -> nomeDisc varchar(45));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> insert into disciplina values
+    -> (null, 'Arquitetura computacional'),
+    -> (null, 'Banco de dados'),
+    -> (null, 'Tecnologia da informação);
+    '> (null, 'tecnologia da informação');
+    '> ';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'tecnologia da informação');
+'' at line 5
+mysql> insert into disciplina values
+    -> (null, 'Arquitetura computacional'),
+    -> (null, 'Banco de dadoa'),
+    -> (null, 'Tecnologia da Informação');
+Query OK, 3 rows affected (0.03 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from disciplina;
++--------+---------------------------+
+| idDisc | nomeDisc                  |
++--------+---------------------------+
+|      1 | Arquitetura computacional |
+|      2 | Banco de dadoa            |
+|      3 | Tecnologia da Informação  |
++--------+---------------------------+
+3 rows in set (0.00 sec)
+
+mysql> alter table disciplina add column fkprofint;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> alter table disciplina add column 'fkgrupoint';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''fkgrupoint'' at line 1
+mysql> alter table disciplina add column fkgrupo int;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table disciplina add constraint fkprof foreign key (fkgrupo) references professor (idProfessor);
+Query OK, 3 rows affected (0.07 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select*from professor;
++-------------+----------+-----------+---------------------------+----------------+
+| idProfessor | nome     | sobrenome | especialidade1            | especialidade2 |
++-------------+----------+-----------+---------------------------+----------------+
+|           1 | Vivian   | Silva     | Banco de Dados            | beber café     |
+|           2 | Caio     | Santos    | Algoritmo                 | Torcedor do sp |
+|           3 | Monica   | Herrero   | Tecnologia da informação  | Empresária     |
+|           4 | Fernando | Brandão   | Projeto e Inovação        | Academia       |
+|           5 | Eduardo  | Santos    | Arquitetura computacional | Arduino        |
+|           6 | Thiago   | Gomes     | Socioemocional            | Livro da vida  |
++-------------+----------+-----------+---------------------------+----------------+
+6 rows in set (0.01 sec)
+
+mysql> select * from disciplina;
++--------+---------------------------+---------+
+| idDisc | nomeDisc                  | fkgrupo |
++--------+---------------------------+---------+
+|      1 | Arquitetura computacional |    NULL |
+|      2 | Banco de dadoa            |    NULL |
+|      3 | Tecnologia da Informação  |    NULL |
++--------+---------------------------+---------+
+3 rows in set (0.00 sec)
+
+mysql> update disciplina set fkgrupo = '1' where id = 1;
+ERROR 1054 (42S22): Unknown column 'id' in 'where clause'
+mysql> update disciplina set fkgrupo = '1' where idDisc = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update disciplina set fkgrupo = '1' where idDisc = 2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update disciplina set fkgrupo = '2' where idDisc= 3;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from disciplina;
++--------+---------------------------+---------+
+| idDisc | nomeDisc                  | fkgrupo |
++--------+---------------------------+---------+
+|      1 | Arquitetura computacional |       1 |
+|      2 | Banco de dadoa            |       1 |
+|      3 | Tecnologia da Informação  |       2 |
++--------+---------------------------+---------+
+3 rows in set (0.00 sec)
+
+mysql> select nome, especialidade1, especialidade2 from professor;
++----------+---------------------------+----------------+
+| nome     | especialidade1            | especialidade2 |
++----------+---------------------------+----------------+
+| Vivian   | Banco de Dados            | beber café     |
+| Caio     | Algoritmo                 | Torcedor do sp |
+| Monica   | Tecnologia da informação  | Empresária     |
+| Fernando | Projeto e Inovação        | Academia       |
+| Eduardo  | Arquitetura computacional | Arduino        |
+| Thiago   | Socioemocional            | Livro da vida  |
++----------+---------------------------+----------------+
+6 rows in set (0.00 sec)
+
+mysql> select nome from professor where disciplina = 'Banco de dados';
+ERROR 1054 (42S22): Unknown column 'disciplina' in 'where clause'
+mysql> select nome from professor where especialidade1 = 'Banco de Dados';
++--------+
+| nome   |
++--------+
+| Vivian |
++--------+
+1 row in set (0.00 sec)
+
+mysql> select nome, especialidade1 from professor where idProfessor = 1;
++--------+----------------+
+| nome   | especialidade1 |
++--------+----------------+
+| Vivian | Banco de Dados |
++--------+----------------+
+1 row in set (0.00 sec)
+
+mysql> select
+    -> * from professor where sobrenome = 'Silva';
++-------------+--------+-----------+----------------+----------------+
+| idProfessor | nome   | sobrenome | especialidade1 | especialidade2 |
++-------------+--------+-----------+----------------+----------------+
+|           1 | Vivian | Silva     | Banco de Dados | beber café     |
++-------------+--------+-----------+----------------+----------------+
+1 row in set (0.00 sec)
+
+mysql> select nome, especialidade1 from professor where disciplina = 'Banco de dadoa'
+    -> ;
+ERROR 1054 (42S22): Unknown column 'disciplina' in 'where clause'
+mysql> select nome from professor join disciplina on idProfessor = fkProf;
+ERROR 1054 (42S22): Unknown column 'fkProf' in 'on clause'
+mysql> select professor.nome,
+    -> disciplina.nomeDisc
+    -> from professor join disciplina on idProfessor = fkProf;
+ERROR 1054 (42S22): Unknown column 'fkProf' in 'on clause'
+mysql> select professor.nome,
+    -> disciplina.nomeDisc
+    -> from professor join disciplina on idProfessor = fkprof;
+ERROR 1054 (42S22): Unknown column 'fkprof' in 'on clause'
+mysql> select professor.nome.
+    ->  disciplina.nomeDisc
+    -> from professor join disciplina on idDisc = fkgrupo;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.nomeDisc
+from professor join disciplina on idDisc = fkgrupo' at line 2
+mysql> select professor.nome
+    -> disciplina.nomeDisc
+    -> from professor join disciplina on idDisc=fkgrupo;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.nomeDisc
+from professor join disciplina on idDisc=fkgrupo' at line 2
+mysql>  select professor.nome
+    ->     -> disciplina.nomeDisc
+    ->     -> from disciplina join professor on idProfessor = fkprof;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'disciplina.nomeDisc
+    -> from disciplina join professor on idProfessor = fkpro' at line 2
+mysql>

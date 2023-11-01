@@ -1,0 +1,181 @@
+EXERCICIO 1///
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use 1sprint;
+Database changed
+mysql> create table professor (
+    -> idProfessor int primary key auto_increment,
+    -> nome varchar(50),
+    -> sobrenome varchar(30),
+    -> especialidade1 varchar(40),
+    -> especialidade2 varchar(40));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table disciplina (
+    -> idDisc int primary key auto_increment,
+    -> nomeDisc varchar(45));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql>  insert into professor values
+    ->  (null, 'Vivian', 'Silva', 'Beber café', 'Torcer pro flamengo'),
+    ->  (null, 'Caio', 'Santos', 'Java', 'Ouvir musica'),
+    ->  (null, 'Thiago', 'Gomes', 'Livro da vida', 'Psicologia'),
+    -> (null, 'Monica', 'Herrero', 'Gestão', 'Documentação'),
+    ->  (null, 'Fernando', 'Brandão', 'Gestão', 'Tecnologia'),
+    ->  (null, 'Rafael', 'Petry', 'Sociemocional', 'Gestão');
+Query OK, 6 rows affected (0.01 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> insert into disciplina values
+    ->  (null, 'Banco de Dados'),
+    ->  (null, 'Algoritmo'),
+    -> (null, 'Tecnologia da Informação');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> alter table professor add column fkDisc int;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table professor add constraint foreign key (fkDisc) references disciplina(idDisc);
+Query OK, 6 rows affected (0.07 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> describe disciplina;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| idDisc   | int         | NO   | PRI | NULL    | auto_increment |
+| nomeDisc | varchar(45) | YES  |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+2 rows in set (0.01 sec)
+
+mysql> describe professor;
++----------------+-------------+------+-----+---------+----------------+
+| Field          | Type        | Null | Key | Default | Extra          |
++----------------+-------------+------+-----+---------+----------------+
+| idProfessor    | int         | NO   | PRI | NULL    | auto_increment |
+| nome           | varchar(50) | YES  |     | NULL    |                |
+| sobrenome      | varchar(30) | YES  |     | NULL    |                |
+| especialidade1 | varchar(40) | YES  |     | NULL    |                |
+| especialidade2 | varchar(40) | YES  |     | NULL    |                |
+| fkDisc         | int         | YES  | MUL | NULL    |                |
++----------------+-------------+------+-----+---------+----------------+
+6 rows in set (0.01 sec)
+
+mysql> update disciplina set fkDisc = 1
+    -> where idProfessor = 1;
+ERROR 1054 (42S22): Unknown column 'idProfessor' in 'where clause'
+mysql> update professor set fkDisc = 1
+    -> where idProfessor = 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update professor set fkDisc = 2
+    -> where idProfessor = 2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update professor set fkDisc = 2
+    -> where idProfessor = 3;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select nome, nomeDisc from professor join disciplina where idprofessor = fkDisc;
++--------+--------------------------+
+| nome   | nomeDisc                 |
++--------+--------------------------+
+| Vivian | Tecnologia da Informação |
+| Vivian | Algoritmo                |
+| Vivian | Banco de Dados           |
+| Caio   | Tecnologia da Informação |
+| Caio   | Algoritmo                |
+| Caio   | Banco de Dados           |
++--------+--------------------------+
+6 rows in set (0.00 sec)
+
+mysql> select p.nome, d.nomeDisc from disciplina as d join professor as p on fkDisc = idProfessor;
++--------+--------------------------+
+| nome   | nomeDisc                 |
++--------+--------------------------+
+| Vivian | Tecnologia da Informação |
+| Vivian | Algoritmo                |
+| Vivian | Banco de Dados           |
+| Caio   | Tecnologia da Informação |
+| Caio   | Algoritmo                |
+| Caio   | Banco de Dados           |
++--------+--------------------------+
+6 rows in set (0.00 sec)
+
+mysql> select * from professor as p join disciplina as d on p.idProfessor where sobrenome = "Silva";
++-------------+--------+-----------+----------------+---------------------+--------+--------+--------------------------+
+| idProfessor | nome   | sobrenome | especialidade1 | especialidade2      | fkDisc | idDisc | nomeDisc                 |
++-------------+--------+-----------+----------------+---------------------+--------+--------+--------------------------+
+|           1 | Vivian | Silva     | Beber café     | Torcer pro flamengo |      1 |      1 | Banco de Dados           |
+|           1 | Vivian | Silva     | Beber café     | Torcer pro flamengo |      1 |      2 | Algoritmo                |
+|           1 | Vivian | Silva     | Beber café     | Torcer pro flamengo |      1 |      3 | Tecnologia da Informação |
++-------------+--------+-----------+----------------+---------------------+--------+--------+--------------------------+
+3 rows in set (0.00 sec)
+
+mysql> select especialidade1, nomeDisc from professor as p join disciplina as d on p.idProfessor where nome = "Vivian";
++----------------+--------------------------+
+| especialidade1 | nomeDisc                 |
++----------------+--------------------------+
+| Beber café     | Banco de Dados           |
+| Beber café     | Algoritmo                |
+| Beber café     | Tecnologia da Informação |
++----------------+--------------------------+
+3 rows in set (0.00 sec)
+
+
+EXERCICIO 2 ///
+
+mysql> use sprint2;
+Database changed
+mysql> create table curso (
+    -> idCurso int primary key auto_increment,
+    -> nome varchar(50),
+    -> sigla char (3),
+    -> coordenador char(40));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into curso values
+    -> (null, 'Análise e Desenvolvimento de sistemas', 'ADS', 'Gerson'),
+    -> (null, 'Sistemas da Informação', 'SIS', 'Alex'),
+    -> (null, 'Ciências da Computação', 'CCO', 'Marise');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> create table Aluno (
+    -> idAluno int primary key auto_increment,
+    -> nome varchar(45),
+    -> sobrenome varchar(45),
+    -> idade int,
+    -> sala varchar(20));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> alter table Aluno add column fkCurso int;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table Aluno add constraint foreign key (fkCurso) references curso (idCurso);
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select * from curso as c join Aluno as a on a.fkCurso = c.idCurso;
+Empty set (0.00 sec)
+
+mysql> select * from curso as c join Aluno as a on a.fkCurso where sobrenome = "";
+Empty set (0.00 sec)
+
+mysql>
+mysql> ALTER TABLE aluno ADD COLUMN semestre varchar(40);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> ALTER TABLE Aluno ADD constraint chksemestre
+    ->  CHECK (semestre in ('1', '2', '3', '4'));
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
